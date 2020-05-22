@@ -11,6 +11,9 @@ PRs are also the place to specify and discuss feature development. You can use G
 
 :information_source: [Forks](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) | [Creating a pull request from a fork](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork)
 
+## Create as a draft
+![create pull request](https://raw.githubusercontent.com/wintergatan-community/vmmx-schema/master/images/create%20PR.gif)
+
 ## Discussion
 Discussing features should be done in the PR, if one exists.  
 We have a [discussion channel](https://discord.gg/rMK6DFT) on the Wintergatan Discord guild.  
