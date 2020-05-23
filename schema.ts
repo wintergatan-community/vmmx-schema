@@ -82,7 +82,7 @@ export interface DrumDropEvent {
 }
 export interface VibraphoneDropEvent {
 	kind: "vibraphone";
-	note: Note;
+	channel: VibraphoneChannel;
 }
 
 // -----------------------------
@@ -133,9 +133,12 @@ export interface MuteEvent {
 }
 
 // VIBRAPHONE
+type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+
 export interface VibraphoneState {
 	vibratoEnabled: boolean;
 	vibratoSpeed: number;
+	notes: { [VC in VibraphoneChannel]: Note };
 }
 
 export type VibraphoneEvent =
