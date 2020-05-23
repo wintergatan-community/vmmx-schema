@@ -111,6 +111,7 @@ export interface PerformanceMetadata {
  */
 export type Event =
 	| DropEvent
+	| DropEvent // Performances only store manual drops
 	| MuteEvent
 	| VibraphoneEvent
 	| HihatMachineEvent
