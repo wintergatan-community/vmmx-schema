@@ -2,8 +2,8 @@ import { Performance } from "./schema";
 
 const example: Performance = {
 	metadata: {
-		author: "test",
-		title: "test",
+		author: "person",
+		title: "Example Title",
 	},
 	program: {
 		metadata: {
@@ -17,8 +17,16 @@ const example: Performance = {
 			mute: {
 				bass: true,
 			},
-			capos: {
-				[1]: 0,
+			bass: {
+				capos: {
+					1: 0,
+				},
+				tuning: {
+					1: "E1",
+					2: "A1",
+					3: "D2",
+					4: "G2",
+				},
 			},
 			flywheel: {
 				connected: false,
@@ -33,18 +41,31 @@ const example: Performance = {
 			vibraphone: {
 				vibratoSpeed: 1,
 				vibratoEnabled: true,
+				notes: {
+					1: "A4",
+					2: "B4",
+					3: "C4",
+					4: "D4",
+					5: "E4",
+					6: "F4",
+					7: "G4",
+					8: "A5",
+					9: "B5",
+					10: "C5",
+					11: "D5",
+				},
 			},
 		},
 		dropEvents: [
 			{
 				kind: "vibraphone",
 				tick: 0,
-				note: "G4",
+				channel: 1,
 			},
 			{
 				kind: "vibraphone",
 				tick: 5,
-				note: "C4",
+				channel: 2,
 			},
 			{
 				kind: "drum",
@@ -57,8 +78,16 @@ const example: Performance = {
 		mute: {
 			bass: true,
 		},
-		capos: {
-			[1]: 0,
+		bass: {
+			capos: {
+				1: 0,
+			},
+			tuning: {
+				1: "E1",
+				2: "A1",
+				3: "D2",
+				4: "G2",
+			},
 		},
 		flywheel: {
 			connected: false,
@@ -73,6 +102,19 @@ const example: Performance = {
 		vibraphone: {
 			vibratoSpeed: 1,
 			vibratoEnabled: true,
+			notes: {
+				1: "A4",
+				2: "B4",
+				3: "C4",
+				4: "D4",
+				5: "E4",
+				6: "F4",
+				7: "G4",
+				8: "A5",
+				9: "B5",
+				10: "C5",
+				11: "D5",
+			},
 		},
 	},
 	events: [
