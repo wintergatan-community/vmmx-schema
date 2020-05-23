@@ -1,0 +1,24 @@
+{
+	"name": "vmmx-schema",
+	"version": "1.0.0-beta",
+	"description": "VMMX data structure",
+	"main": "schema.ts",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/wintergatan-community/vmmx-schema.git"
+	},
+	"keywords": [
+		"wintergatan",
+		"mmx"
+	],
+	"author": "Wintergatan community",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/wintergatan-community/vmmx-schema/issues"
+	},
+	"homepage": "https://github.com/wintergatan-community/vmmx-schema#readme",
+	"devDependencies": {}
+}
