@@ -2,8 +2,8 @@ import { Performance } from "./schema";
 
 const example: Performance = {
 	metadata: {
-		author: "test",
-		title: "test",
+		author: "person",
+		title: "Example Title",
 	},
 	program: {
 		metadata: {
@@ -14,15 +14,23 @@ const example: Performance = {
 			version: "v1.0.0",
 		},
 		state: {
-			mute: {
-				bass: true,
-			},
-			capos: {
-				[1]: 0,
-			},
-			flywheel: {
-				connected: false,
+			machine: {
+				mute: {
+					bass: true,
+				},
 				bpm: 120,
+				flywheelConnected: false,
+			},
+			bass: {
+				capos: {
+					1: 0,
+				},
+				tuning: {
+					1: "E1",
+					2: "A1",
+					3: "D2",
+					4: "G2",
+				},
 			},
 			hihat: {
 				closed: false,
@@ -33,18 +41,31 @@ const example: Performance = {
 			vibraphone: {
 				vibratoSpeed: 1,
 				vibratoEnabled: true,
+				notes: {
+					1: "A4",
+					2: "B4",
+					3: "C4",
+					4: "D4",
+					5: "E4",
+					6: "F4",
+					7: "G4",
+					8: "A5",
+					9: "B5",
+					10: "C5",
+					11: "D5",
+				},
 			},
 		},
 		dropEvents: [
 			{
 				kind: "vibraphone",
 				tick: 0,
-				note: "G4",
+				channel: 1,
 			},
 			{
 				kind: "vibraphone",
 				tick: 5,
-				note: "C4",
+				channel: 2,
 			},
 			{
 				kind: "drum",
@@ -54,15 +75,23 @@ const example: Performance = {
 		],
 	},
 	initialState: {
-		mute: {
-			bass: true,
-		},
-		capos: {
-			[1]: 0,
-		},
-		flywheel: {
-			connected: false,
+		machine: {
+			mute: {
+				bass: true,
+			},
 			bpm: 120,
+			flywheelConnected: false,
+		},
+		bass: {
+			capos: {
+				1: 0,
+			},
+			tuning: {
+				1: "E1",
+				2: "A1",
+				3: "D2",
+				4: "G2",
+			},
 		},
 		hihat: {
 			closed: false,
@@ -73,6 +102,19 @@ const example: Performance = {
 		vibraphone: {
 			vibratoSpeed: 1,
 			vibratoEnabled: true,
+			notes: {
+				1: "A4",
+				2: "B4",
+				3: "C4",
+				4: "D4",
+				5: "E4",
+				6: "F4",
+				7: "G4",
+				8: "A5",
+				9: "B5",
+				10: "C5",
+				11: "D5",
+			},
 		},
 	},
 	events: [
@@ -82,14 +124,15 @@ const example: Performance = {
 			time: 12,
 		},
 		{
-			kind: "vibraphone_vibrato_enabled",
-			vibratoEnabled: false,
-			time: 12,
+			kind: "bass",
+			fret: 3,
+			string: 1,
+			time: 15,
 		},
 		{
-			kind: "vibraphone_vibrato_enabled",
-			vibratoEnabled: false,
-			time: 12,
+			kind: "vibraphone",
+			channel: 2,
+			time: 17,
 		},
 	],
 };
