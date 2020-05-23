@@ -11,11 +11,3 @@ This is done using [JSON Schema](https://json-schema.org/).
 ## Building Docs
 
 [Typedoc](https://typedoc.org/) can be used to generate API/Type documentation for this package.
-
-> The example below implies that `npm i -D typedoc typescript` has been run, and the typescript API lives in `/src`.
-> Neither assumption is true at the time of writing.
-
-```bash
-typedoc --out docs src
-open ./docs/index.html
-```
