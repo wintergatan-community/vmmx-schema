@@ -74,7 +74,7 @@ export interface CoreDropEvent {
 export interface BassDropEvent {
 	kind: "bass";
 	string: BassString;
-	note: Note;
+	fret: number;
 }
 export interface DrumDropEvent {
 	kind: "drum";
@@ -110,7 +110,6 @@ export interface PerformanceMetadata {
  * be multiple events with the same time.
  */
 export type Event =
-	| DropEvent
 	| DropEvent // Performances only store manual drops
 	| MuteEvent
 	| VibraphoneEvent
@@ -167,7 +166,7 @@ export type BassEvent = BassCapoEvent;
 export interface BassCapoEvent {
 	kind: "bass_capo";
 	capoString: BassString;
-	position: number;
+	fret: number;
 }
 
 // HIHAT MACHINE

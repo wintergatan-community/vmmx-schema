@@ -124,14 +124,15 @@ const example: Performance = {
 			time: 12,
 		},
 		{
-			kind: "vibraphone_vibrato_enabled",
-			vibratoEnabled: false,
-			time: 12,
+			kind: "bass",
+			fret: 3,
+			string: 1,
+			time: 15,
 		},
 		{
-			kind: "vibraphone_vibrato_enabled",
-			vibratoEnabled: false,
-			time: 12,
+			kind: "vibraphone",
+			channel: 2,
+			time: 17,
 		},
 	],
 };
