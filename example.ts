@@ -1,56 +1,95 @@
-import { Program } from "./schema";
+import { Performance } from "./schema";
 
-const exampleSong: Program = {
+const example: Performance = {
 	metadata: {
-		title: "My awesome song",
-		author: "Martin",
-		tpq: 240,
-		version: "0.1.0", // Version of VMMX in which the current song was made
-		length: 61440,
-		procrastination: 100,
+		author: "test",
+		title: "test",
 	},
-	state: {
-		bpm: 100,
-		instruments: {
-			drums: {
-				hihatMachine: {
-					setting: "WIP",
-				},
-				hihat: { muted: false },
-				snare: { muted: false },
-				kick: { muted: false },
-				cymbal: { muted: false },
+	program: {
+		metadata: {
+			author: "",
+			title: "",
+			tpq: 240,
+			length: 61440,
+			version: "v1.0.0",
+		},
+		state: {
+			mute: {
+				bass: true,
+			},
+			capos: {
+				[1]: 0,
+			},
+			flywheel: {
+				connected: false,
+				bpm: 120,
+			},
+			hihat: {
+				closed: false,
+			},
+			hihatMachine: {
+				setting: "",
 			},
 			vibraphone: {
-				notes: ["A_1", "B_1", "C_1", "D_1", "E_1", "B_1"], // Notes
-				vibrato: false,
 				vibratoSpeed: 1,
-				muted: false,
+				vibratoEnabled: true,
 			},
-			bass: {
-				strings: {
-					0: { tuning: "E1", capoFret: 2 },
-					1: { tuning: "A1", capoFret: 2 },
-				},
-				muted: false,
+		},
+		dropEvents: [
+			{
+				kind: "vibraphone",
+				tick: 0,
+				note: "G4",
 			},
+			{
+				kind: "vibraphone",
+				tick: 5,
+				note: "C4",
+			},
+			{
+				kind: "drum",
+				tick: 10,
+				drum: "snare",
+			},
+		],
+	},
+	initialState: {
+		mute: {
+			bass: true,
+		},
+		capos: {
+			[1]: 0,
+		},
+		flywheel: {
+			connected: false,
+			bpm: 120,
+		},
+		hihat: {
+			closed: false,
+		},
+		hihatMachine: {
+			setting: "",
+		},
+		vibraphone: {
+			vibratoSpeed: 1,
+			vibratoEnabled: true,
 		},
 	},
 	events: [
 		{
-			tick: 3,
-			kind: "drop",
-			channel: { instrument: "vibraphone", localChannel: 3 },
+			kind: "vibraphone_vibrato_enabled",
+			vibratoEnabled: false,
+			time: 12,
 		},
 		{
-			tick: 5,
-			kind: "drop",
-			channel: { instrument: "vibraphone", localChannel: 3 },
+			kind: "vibraphone_vibrato_enabled",
+			vibratoEnabled: false,
+			time: 12,
 		},
 		{
-			tick: 18,
-			kind: "drop",
-			channel: { instrument: "bass", localChannel: 2 },
+			kind: "vibraphone_vibrato_enabled",
+			vibratoEnabled: false,
+			time: 12,
 		},
 	],
 };
