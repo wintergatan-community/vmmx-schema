@@ -58,8 +58,8 @@ export interface ProgramMetadata {
 /** The machine's state */
 export interface State {
 	mute: { [C in Channel]?: boolean };
-	capos: { [S in BassString]?: number };
 	vibraphone: VibraphoneState;
+	bass: BassState;
 	hihatMachine: HihatMachineState;
 	hihat: HihatState;
 	flywheel: FlywheelState;
@@ -138,6 +138,7 @@ type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 export interface VibraphoneState {
 	vibratoEnabled: boolean;
 	vibratoSpeed: number;
+	/** Cannot be changed via event */
 	notes: { [VC in VibraphoneChannel]: Note };
 }
 
@@ -155,6 +156,11 @@ export interface VibraphoneVibratoSpeedEvent {
 
 // BASS
 export type BassString = 1 | 2 | 3 | 4;
+
+export interface BassState {
+	capos: { [S in BassString]?: number };
+	tuning: { [S in BassString]?: Note };
+}
 
 export type BassEvent = BassCapoEvent;
 export interface BassCapoEvent {
