@@ -39,7 +39,7 @@ export interface Program {
 	 * ```
 	 */
 	state: State;
-	dropEvents: TimedDropEvent[];
+	dropEvents: TickedDropEvent[];
 }
 // prog.state.mute.snare = !prog.state.mute.snare; // Somebody pulls / pushes the snare-mute lever
 /** Metadata for program */
@@ -67,7 +67,7 @@ export interface State {
 
 /** A dropping of a marble (no delay) */
 export type DropEvent = BassDropEvent | DrumDropEvent | VibraphoneDropEvent;
-export type TimedDropEvent = CoreDropEvent & DropEvent;
+export type TickedDropEvent = CoreDropEvent & DropEvent;
 export interface CoreDropEvent {
 	tick: number;
 }
