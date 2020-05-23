@@ -14,8 +14,12 @@ const example: Performance = {
 			version: "v1.0.0",
 		},
 		state: {
-			mute: {
-				bass: true,
+			machine: {
+				mute: {
+					bass: true,
+				},
+				bpm: 120,
+				flywheelConnected: false,
 			},
 			bass: {
 				capos: {
@@ -27,10 +31,6 @@ const example: Performance = {
 					3: "D2",
 					4: "G2",
 				},
-			},
-			flywheel: {
-				connected: false,
-				bpm: 120,
 			},
 			hihat: {
 				closed: false,
@@ -75,8 +75,12 @@ const example: Performance = {
 		],
 	},
 	initialState: {
-		mute: {
-			bass: true,
+		machine: {
+			mute: {
+				bass: true,
+			},
+			bpm: 120,
+			flywheelConnected: false,
 		},
 		bass: {
 			capos: {
@@ -88,10 +92,6 @@ const example: Performance = {
 				3: "D2",
 				4: "G2",
 			},
-		},
-		flywheel: {
-			connected: false,
-			bpm: 120,
 		},
 		hihat: {
 			closed: false,

@@ -11,10 +11,9 @@
  * Events
  * -------
  * Ordrered by Machine, Vibraphone, Bass,
- * HiHat machine,HiHat, Flywheel:
+ * HiHat machine, HiHat:
  * - sub-States
  * - sub-Events
- * -
  */
 import { Note } from "./note_names";
 
@@ -57,12 +56,11 @@ export interface ProgramMetadata {
 
 /** The machine's state */
 export interface State {
-	mute: { [C in Channel]?: boolean };
+	machine: MachineState;
 	vibraphone: VibraphoneState;
 	bass: BassState;
 	hihatMachine: HihatMachineState;
 	hihat: HihatState;
-	flywheel: FlywheelState;
 }
 
 /** A dropping of a marble (no delay) */
@@ -111,11 +109,10 @@ export interface PerformanceMetadata {
  */
 export type Event =
 	| DropEvent // Performances only store manual drops
-	| MuteEvent
+	| MachineEvent
 	| VibraphoneEvent
 	| HihatMachineEvent
 	| HihatEvent
-	| FlywheelEvent
 	| BassEvent;
 
 export type TimedEvent = BaseTimedEvent & Event;
@@ -126,10 +123,25 @@ export interface BaseTimedEvent {
 // -----------------------------
 
 // MACHINE
-export interface MuteEvent {
-	kind: "mute";
+export interface MachineState {
+	mute: { [C in Channel]?: boolean };
+	bpm: number;
+	flywheelConnected: boolean;
+}
+
+export type MachineEvent = MachineMuteEvent;
+export interface MachineMuteEvent {
+	kind: "machine_mute";
 	channel: Channel;
 	muted: boolean;
+}
+export interface MachineTempoEvent {
+	kind: "machine_tempo";
+	bpm: number;
+}
+export interface FlywheelConnectedEvent {
+	kind: "machine_flywheelConnected";
+	connected: boolean;
 }
 
 // VIBRAPHONE
@@ -189,21 +201,4 @@ export type HihatEvent = HihatClosedEvent;
 export interface HihatClosedEvent {
 	kind: "hihat_closed";
 	closed: boolean;
-}
-
-// FLYWHEEL
-export interface FlywheelState {
-	connected: boolean;
-	bpm: number;
-}
-
-export type FlywheelEvent = FlywheelTempoEvent | FlywheelConnectedEvent;
-export interface FlywheelTempoEvent {
-	kind: "flywheel_tempo";
-	bpm: number;
-}
-export interface FlywheelConnectedEvent {
-	kind: "flywheel_connected";
-	connected: boolean;
-	time: number;
 }
