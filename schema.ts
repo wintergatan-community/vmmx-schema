@@ -145,7 +145,7 @@ export interface FlywheelConnectedEvent {
 }
 
 // VIBRAPHONE
-type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+export type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 
 export interface VibraphoneState {
 	vibratoEnabled: boolean;
