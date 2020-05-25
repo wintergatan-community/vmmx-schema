@@ -129,10 +129,6 @@ export enum NoteNames {
 	F9,
 	FS9,
 	G9,
-	GS9,
-	A9,
-	AS9,
-	B9,
 }
 
 export type Note = keyof typeof NoteNames; // F3 | ... | F6
