@@ -1,27 +1,52 @@
-/** Main schema definition
+/**
+ * # Main schema definition
  *
- * CONTENTS:
- * Program
- * ProgramMetadata
- * State
- * DropEvent (and subtypes / -interfaces)
+ * ## Contents:
+ * - [[Program]]
+ * - [[ProgramMetadata]]
+ * - [[State]]
+ * - [[DropEvent]] (and subtypes/interfaces)
  * -------
- * Performance
- * PerformanceMetadata
- * Events
+ * - [[Performance]]
+ * - [[PerformanceMetadata]]
+ * - Events
  * -------
  * Ordrered by Machine, Vibraphone, Bass,
  * HiHat machine, HiHat:
  * - sub-States
  * - sub-Events
+ * @packageDocumentation
  */
 import { Note } from "./note_names";
 
+/**
+ * Represents all possible drums that can be played. Used for specifying which drum
+ * to play in a [[DrumDropEvent]].
+ */
 export type DrumType = "bassdrum" | "hihat" | "snare";
+/**
+ * Represents a channel that can be muted. Used as keys in the [[MachineState.mute]] object.
+ *
+ * ## Example
+ * ```typescript
+ * // specifies that the bassdrum and vibraphone are muted
+ * const state: MachineState = {
+ *   mute: {
+ *     bassdrum: true,
+ *     vibraphone: true,
+ *   },
+ *   ...
+ * };
+ */
 export type Channel = DrumType | "vibraphone" | "bass";
 
-/** Programs save TimedDropEvent only (Programming Wheel + bass notes) */
+/**
+ * Represents a program on the MMX's programming wheel. Used to store the programmed part of a performance.
+ */
 export interface Program {
+	/**
+	 * Information about this progam. It can be distinct from a performance's metadata.
+	 */
 	metadata: ProgramMetadata;
 	/**
 	 * This is the "working" state of the machine, outside of a performance.
@@ -34,27 +59,41 @@ export interface Program {
 	 * ```typescript
 	 * let prog: Program;
 	 * // invert the muted state of the snare
-	 * prog.state.mute.snare =!prog.state.mutue.snare;
+	 * prog.state.mute.snare = !prog.state.mute.snare;
 	 * ```
 	 */
 	state: State;
+	/**
+	 * All the events that occur during this program. They *must* be in acending order by tick.
+	 */
 	dropEvents: TickedDropEvent[];
 }
-// prog.state.mute.snare = !prog.state.mute.snare; // Somebody pulls / pushes the snare-mute lever
-/** Metadata for program */
+
+/** Represents metadata about a program. Used to indicate how this program should be played. */
 export interface ProgramMetadata {
+	/**
+	 * The title of this program. It can be distinct from the title of the performance.
+	 */
 	title: string;
+	/**
+	 * The author of this program. It can be distinct from the title of the performance.
+	 */
 	author: string;
-	/** Ticks per quarter */
+	/**
+	 * Pulses per quarter.
+	 * This basically represents how many distinct pieces a quarter note is divisible by.
+	 * The higher the PPQ, the more flexiblilty when it comes to placing notes.
+	 */
 	readonly tpq: 240;
 	/** Version of VMMX in which the current program was made */
 	readonly version: string;
-	/** Total ticks on the "programming wheel" 240*4*bars on wheel */
+	/** Total ticks on the "programming wheel" 240 PPQ \* 4 beats/measure \* 16 bars on wheel */
 	readonly length: 61440;
+	/** The amount of procrastination that occured during the making of this program. */
 	procrastination?: number;
 }
 
-/** The machine's state */
+/** Represents the machine's state. Used to specify both the start state and running state of the machine. */
 export interface State {
 	machine: MachineState;
 	vibraphone: VibraphoneState;
@@ -63,142 +102,278 @@ export interface State {
 	hihat: HihatState;
 }
 
-/** A dropping of a marble (no delay) */
+/** Represents the dropping of a single marble with no timing information. */
 export type DropEvent = BassDropEvent | DrumDropEvent | VibraphoneDropEvent;
+
+/** Represents the dropping of a single marble with an associated tick. */
 export type TickedDropEvent = CoreDropEvent & DropEvent;
+
+/** Represents information common to all drop events. */
 export interface CoreDropEvent {
+	/** The tick (pulse) that the marble is to be dropped on. */
 	tick: number;
 }
+/** Represents the dropping of a single bass marble. */
 export interface BassDropEvent {
 	kind: "bass";
+	/** The string (not note) to drop the marble onto. */
 	string: BassString;
+	/**
+	 * The fret to be played when this marble hits.
+	 *
+	 * Even though this technically requires user input, we opted to specify the fret here
+	 * because it's much simpler than requiring a separate fret pressed event in the program.
+	 */
 	fret: number;
 }
+/** Represents the dropping of a single drum marble. */
 export interface DrumDropEvent {
 	kind: "drum";
+	/** The drum to drop the marble onto. */
 	drum: DrumType;
 }
+/** Represents the dropping of a single vibraphone marble. */
 export interface VibraphoneDropEvent {
 	kind: "vibraphone";
+	/** The channel (key) to drop the marble onto.
+	 *
+	 * To figure out which note it will play, the [[VibraphoneState.notes]]
+	 * property must be referenced.
+	 * ```typescript
+	 * const vDropEvent: VibraphoneDropEvent;
+	 * const vState: VibraphoneState;
+	 * const noteHit = vState.notes[vDropEvent.channel];
+	 * ```
+	 */
 	channel: VibraphoneChannel;
 }
 
-// -----------------------------
-
+/**
+ * Represents the performance of a [[Program]].
+ */
 export interface Performance {
+	/** Information about this performance. */
 	metadata: PerformanceMetadata;
+	/** The program associated with this performance. */
 	program: Program;
-	/** Not the working state. Use Program.state for that.
-	 * initialState should be copied into Program.state at time 0
-	 * of a Performance playback
+	/**
+	 * The state of the machine at the start of the performance.
+	 * A bunch of machine events could be specified for tick 0, but
+	 * this way a song performer doesn't miss one thing.
+	 *
+	 * Note that this should not be changed during the performance.
+	 * Use [[Program.state]] if you want to keep track of the current
+	 * state of the machine. This means that [[Performance.initialState]]
+	 * should be copied into [[Program.state]] at tick 0 of Performance playback.
 	 */
 	readonly initialState: State;
+	/**
+	 * The events that make up this performance. As with [[Program.events]],
+	 * these events must be in ascending order.
+	 */
 	events: TimedEvent[];
 }
 /** Metadata for performance */
 export interface PerformanceMetadata {
+	/**
+	 * The title of the performance.
+	 * This doesn't have to be the same as the title of the program.
+	 */
 	title: string;
+	/**
+	 * The author/performer of the performance.
+	 * This doesn't have to be the same as the author of the program.
+	 */
 	author: string;
 }
 
-/** An untimed event that changes the state of one channel
- * (or drops a marble)
+/**
+ * An untimed event that changes the state of one channel
+ * or manually drops a marble.
  *
- * Event only change one thing. Multiple simultanious changes must
- * be multiple events with the same time.
+ * Events only change one thing. Multiple simultanious changes must
+ * be represented byt multiple events with the same tick.
  */
 export type Event =
-	| DropEvent // Performances only store manual drops
+	| DropEvent
 	| MachineEvent
 	| VibraphoneEvent
 	| HihatMachineEvent
 	| HihatEvent
 	| BassEvent;
 
+/** Represents an event occuring in time (non-tempo dependent). */
 export type TimedEvent = BaseTimedEvent & Event;
+/** Represents information associated with all timed events. */
 export interface BaseTimedEvent {
+	/** The time (in seconds) that this event occurs. */
 	time: number;
 }
 
-// -----------------------------
-
-// MACHINE
+/**
+ * Represents the overall state of the machine. Everything that's
+ * not specific to a particular instrument is represented here.
+ */
 export interface MachineState {
+	/** Whether or not particular instrument from [[Channels]] is muted. */
 	mute: { [C in Channel]?: boolean };
+	/** The beats per minute the machine is operating at. */
 	bpm: number;
+	/** Whether or not the programming wheel is spinning. */
 	flywheelConnected: boolean;
 }
 
+/**
+ * All possible events relating to the machine itself.
+ */
 export type MachineEvent = MachineMuteEvent;
+/** An event representing the muting or unmuting of a [[Channel]] */
 export interface MachineMuteEvent {
 	kind: "machine_mute";
+	/** The channel affected. */
 	channel: Channel;
+	/** Whether or not the channel should be muted or unmuted. */
 	muted: boolean;
 }
+/**
+ * An event representing a change in the machine's BPM.
+ *
+ * This change will be instantanious, so if a gradual change is
+ * desired, it must be acheived by specifying small increments of
+ * change to the BPM. This may change in the future.
+ */
 export interface MachineTempoEvent {
 	kind: "machine_tempo";
+	/** The BPM to set the machine to. */
 	bpm: number;
 }
+/**
+ * An event representing the flywheel getting connected or disconnected.
+ *
+ * This equates the the programming wheel starting or stopping.
+ */
 export interface FlywheelConnectedEvent {
 	kind: "machine_flywheelConnected";
+	/**
+	 * Whether or not the flywheel is connected and thus also
+	 * whether or not the programming wheel is turning.
+	 */
 	connected: boolean;
 }
 
-// VIBRAPHONE
+/**
+ * Represents every channel that can be played on the vibraphone.
+ *
+ * We decided to start at one since the [[BassString]] type also
+ * starts at one. We also decided to only represent playable
+ * channels and not actual channels (two per note) because that is
+ * an implementation detail of the physical MMX.
+ */
 export type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 
+/**
+ * Represents the state pertaining to the vibraphone.
+ */
 export interface VibraphoneState {
+	/** Whether or not the vibrato is engaged */
 	vibratoEnabled: boolean;
+	/** Which vibrato gear is selected. */
 	vibratoSpeed: number;
-	/** Cannot be changed via event */
+	/**
+	 * Which notes represent which channels.
+	 * These cannot be changed via events and thus stay
+	 * the same throughout the course of an entire program.
+	 */
 	notes: { [VC in VibraphoneChannel]: Note };
 }
 
+/**
+ * Any event pertaining to the vibraphone.
+ */
 export type VibraphoneEvent =
 	| VibraphoneVibratoEnabledEvent
 	| VibraphoneVibratoSpeedEvent;
+/** An event corresonding to a change in the [[VibraphoneState.vibratoEnabled]] propery. */
 export interface VibraphoneVibratoEnabledEvent {
 	kind: "vibraphone_vibrato_enabled";
+	/** Whether or not the vibrato should be enabled. */
 	vibratoEnabled: boolean;
 }
+/** An event corresonding to a change in the [[VibraphoneState.vibratoSpeed]] propery */
 export interface VibraphoneVibratoSpeedEvent {
 	kind: "vibraphone_vibrato_speed";
+	/** The new speed of the vibrato. */
 	vibratoSpeed: number;
 }
 
-// BASS
+/**
+ * Represents a single string on the bass.
+ *
+ * We chose to start at one since musicians count
+ * starting from one and the terminology already
+ * exists in the music realm.
+ */
 export type BassString = 1 | 2 | 3 | 4;
 
+/** Represents the state pertaining to the bass. */
 export interface BassState {
+	/**
+	 * Which frets the capos are on.
+	 * `0` or nothing means no capo is applied to that string.
+	 */
 	capos: { [S in BassString]?: number };
+	/**
+	 * Which notes the strings are tuned to.
+	 * Nothing means the standard bass tuning
+	 * `E A D G` (for now).
+	 */
 	tuning: { [S in BassString]?: Note };
 }
 
+/** Any event pertaining to the bass. */
 export type BassEvent = BassCapoEvent;
+/** An event corresponding to a capo being applied, moved, or removed. */
 export interface BassCapoEvent {
 	kind: "bass_capo";
+	/** Which string is affected. */
 	capoString: BassString;
+	/**
+	 * Which fret is the capo to be applied to.
+	 * `0` or nothing means no capo is applied.
+	 */
 	fret: number;
 }
 
-// HIHAT MACHINE
+/** Represents the state pertaining to the hihat machine. */
 export interface HihatMachineState {
+	/** TBD */
 	setting: string;
 }
 
+/** Any event pertaining to the hihat machine. */
 export type HihatMachineEvent = HihatMachineSettingEvent;
+/** An event corresponding to a change in the hihat machine's setting. */
 export interface HihatMachineSettingEvent {
 	kind: "hihatmachine_setting";
+	/**
+	 * The new hihat machine state.
+	 * This will probably change whenever the [[HihatMachineState.setting]]
+	 * is assigned a meaning.
+	 */
 	state: HihatMachineState;
 }
 
-// HIHAT
+/** Represents the state pertaining to the hihat, not the hihat machine. */
 export interface HihatState {
+	/** Whether or not the hihat is closed. */
 	closed: boolean;
 }
 
+/** Any event pertaining to the hihat, not the hihat machine. */
 export type HihatEvent = HihatClosedEvent;
+/** An event corresponding to a change in the hihat closed status. */
 export interface HihatClosedEvent {
 	kind: "hihat_closed";
+	/** Whether or not the hihat should be closed or opened. */
 	closed: boolean;
 }
