@@ -11,7 +11,7 @@
  * - [[PerformanceMetadata]]
  * - Events
  * -------
- * Ordrered by Machine, Vibraphone, Bass,
+ * Ordered by Machine, Vibraphone, Bass,
  * HiHat machine, HiHat:
  * - sub-States
  * - sub-Events
@@ -45,14 +45,14 @@ export type Channel = DrumType | "vibraphone" | "bass";
  */
 export interface Program {
 	/**
-	 * Information about this progam. It can be distinct from a performance's metadata.
+	 * Information about this program. It can be distinct from a performance's metadata.
 	 */
 	metadata: ProgramMetadata;
 	/**
 	 * This is the "working" state of the machine, outside of a performance.
 	 * When a user is modifying the program, this is how we store what settings they use.
 	 * Whenever the user saves, this field gets updated, and whether they load, this gets read.
-	 * It has almost no relevence when editing a performance since the performance events will
+	 * It has almost no relevance when editing a performance since the performance events will
 	 * cause it to be updated dynamically.
 	 *
 	 * ## Example
@@ -64,7 +64,7 @@ export interface Program {
 	 */
 	state: State;
 	/**
-	 * All the events that occur during this program. They *must* be in acending order by tick.
+	 * All the events that occur during this program. They *must* be in ascending order by tick.
 	 */
 	dropEvents: TickedDropEvent[];
 }
@@ -82,14 +82,14 @@ export interface ProgramMetadata {
 	/**
 	 * Pulses per quarter.
 	 * This basically represents how many distinct pieces a quarter note is divisible by.
-	 * The higher the PPQ, the more flexiblilty when it comes to placing notes.
+	 * The higher the PPQ, the more flexibility when it comes to placing notes.
 	 */
 	readonly tpq: 240;
 	/** Version of VMMX in which the current program was made */
 	readonly version: string;
 	/** Total ticks on the "programming wheel" 240 PPQ \* 4 beats/measure \* 16 bars on wheel */
 	readonly length: 61440;
-	/** The amount of procrastination that occured during the making of this program. */
+	/** The amount of procrastination that occurred during the making of this program. */
 	procrastination?: number;
 }
 
@@ -191,7 +191,7 @@ export interface PerformanceMetadata {
  * An untimed event that changes the state of one channel
  * or manually drops a marble.
  *
- * Events only change one thing. Multiple simultanious changes must
+ * Events only change one thing. Multiple simultaneous changes must
  * be represented byt multiple events with the same tick.
  */
 export type Event =
@@ -202,7 +202,7 @@ export type Event =
 	| HihatEvent
 	| BassEvent;
 
-/** Represents an event occuring in time (non-tempo dependent). */
+/** Represents an event occurring in time (non-tempo dependent). */
 export type TimedEvent = BaseTimedEvent & Event;
 /** Represents information associated with all timed events. */
 export interface BaseTimedEvent {
@@ -238,8 +238,8 @@ export interface MachineMuteEvent {
 /**
  * An event representing a change in the machine's BPM.
  *
- * This change will be instantanious, so if a gradual change is
- * desired, it must be acheived by specifying small increments of
+ * This change will be instantaneous, so if a gradual change is
+ * desired, it must be achieved by specifying small increments of
  * change to the BPM. This may change in the future.
  */
 export interface MachineTempoEvent {
@@ -293,13 +293,13 @@ export interface VibraphoneState {
 export type VibraphoneEvent =
 	| VibraphoneVibratoEnabledEvent
 	| VibraphoneVibratoSpeedEvent;
-/** An event corresonding to a change in the [[VibraphoneState.vibratoEnabled]] propery. */
+/** An event corresponding to a change in the [[VibraphoneState.vibratoEnabled]] property. */
 export interface VibraphoneVibratoEnabledEvent {
 	kind: "vibraphone_vibrato_enabled";
 	/** Whether or not the vibrato should be enabled. */
 	vibratoEnabled: boolean;
 }
-/** An event corresonding to a change in the [[VibraphoneState.vibratoSpeed]] propery */
+/** An event corresponding to a change in the [[VibraphoneState.vibratoSpeed]] property */
 export interface VibraphoneVibratoSpeedEvent {
 	kind: "vibraphone_vibrato_speed";
 	/** The new speed of the vibrato. */
