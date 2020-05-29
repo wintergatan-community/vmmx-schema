@@ -115,8 +115,8 @@ export type Event =
 	| HihatEvent
 	| BassEvent;
 
-export type TimedEvent = BaseTimedEvent & Event;
-export interface BaseTimedEvent {
+export type TimedEvent = CoreTimedEvent & Event;
+export interface CoreTimedEvent {
 	time: number;
 }
 
