@@ -101,6 +101,11 @@ export interface PerformanceMetadata {
 	author: string;
 }
 
+export enum EventBakeType {
+	AUTO,
+	MODIFIED_AUTO,
+	MANUAL,
+}
 /** An untimed event that changes the state of one channel
  * (or drops a marble)
  *
@@ -118,6 +123,7 @@ export type Event =
 export type TimedEvent = CoreTimedEvent & Event;
 export interface CoreTimedEvent {
 	time: number;
+	bakeType: EventBakeType;
 }
 
 // -----------------------------
