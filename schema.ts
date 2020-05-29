@@ -82,6 +82,15 @@ export interface VibraphoneDropEvent {
 	kind: "vibraphone";
 	channel: VibraphoneChannel;
 }
+export enum EventBakeType {
+	AUTO,
+	MODIFIED_AUTO,
+	MANUAL,
+}
+export type PerformanceDropEvent = DropEvent & CorePerformanceDropEvent;
+export interface CorePerformanceDropEvent {
+	bakeType: EventBakeType;
+}
 
 // -----------------------------
 
@@ -101,11 +110,6 @@ export interface PerformanceMetadata {
 	author: string;
 }
 
-export enum EventBakeType {
-	AUTO,
-	MODIFIED_AUTO,
-	MANUAL,
-}
 /** An untimed event that changes the state of one channel
  * (or drops a marble)
  *
@@ -113,7 +117,7 @@ export enum EventBakeType {
  * be multiple events with the same time.
  */
 export type Event =
-	| DropEvent // Performances only store manual drops
+	| PerformanceDropEvent
 	| MachineEvent
 	| VibraphoneEvent
 	| HihatMachineEvent
@@ -123,7 +127,6 @@ export type Event =
 export type TimedEvent = CoreTimedEvent & Event;
 export interface CoreTimedEvent {
 	time: number;
-	bakeType: EventBakeType;
 }
 
 // -----------------------------
