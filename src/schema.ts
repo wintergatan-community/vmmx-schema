@@ -59,12 +59,12 @@ export interface Program {
 	 * ```typescript
 	 * let prog: Program;
 	 * // invert the muted state of the snare
-	 * prog.state.mute.snare = !prog.state.mute.snare;
+	 * prog.state.machine.mute.snare = !prog.state.machine.mute.snare;
 	 * ```
 	 */
 	state: State;
 	/**
-	 * All the events that occur during this program. They *must* be in ascending order by tick.
+	 * All the [[TickedDropEvent]]s that occur during this program. They *must* be in ascending order by tick.
 	 */
 	dropEvents: TickedDropEvent[];
 }
@@ -149,7 +149,7 @@ export interface VibraphoneDropEvent {
 }
 
 /**
- * Represents the performance of a [[Program]].
+ * Represents a single performance of the associated [[Program]].
  */
 export interface Performance {
 	/** Information about this performance. */
@@ -158,8 +158,6 @@ export interface Performance {
 	program: Program;
 	/**
 	 * The state of the machine at the start of the performance.
-	 * A bunch of machine events could be specified for tick 0, but
-	 * this way a song performer doesn't miss one thing.
 	 *
 	 * Note that this should not be changed during the performance.
 	 * Use [[Program.state]] if you want to keep track of the current
@@ -168,7 +166,7 @@ export interface Performance {
 	 */
 	readonly initialState: State;
 	/**
-	 * The events that make up this performance. As with [[Program.events]],
+	 * The events that make up this performance. As with [[Program.dropEvents]],
 	 * these events must be in ascending order.
 	 */
 	events: TimedEvent[];
@@ -192,7 +190,7 @@ export interface PerformanceMetadata {
  * or manually drops a marble.
  *
  * Events only change one thing. Multiple simultaneous changes must
- * be represented byt multiple events with the same tick.
+ * be represented by multiple events with the same tick.
  */
 export type Event =
 	| DropEvent
@@ -215,7 +213,7 @@ export interface BaseTimedEvent {
  * not specific to a particular instrument is represented here.
  */
 export interface MachineState {
-	/** Whether or not particular instrument from [[Channels]] is muted. */
+	/** Whether or not particular [[Channel]] is muted. */
 	mute: { [C in Channel]?: boolean };
 	/** The beats per minute the machine is operating at. */
 	bpm: number;
@@ -250,7 +248,7 @@ export interface MachineTempoEvent {
 /**
  * An event representing the flywheel getting connected or disconnected.
  *
- * This equates the the programming wheel starting or stopping.
+ * This equates to the programming wheel starting or stopping instantaneously.
  */
 export interface FlywheelConnectedEvent {
 	kind: "machine_flywheelConnected";
@@ -277,12 +275,13 @@ export type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 export interface VibraphoneState {
 	/** Whether or not the vibrato is engaged */
 	vibratoEnabled: boolean;
-	/** Which vibrato gear is selected. */
+	/** The vibrato speed from 0 to 1 */
 	vibratoSpeed: number;
 	/**
 	 * Which notes represent which channels.
 	 * These cannot be changed via events and thus stay
-	 * the same throughout the course of an entire program.
+	 * the same throughout the course of an entire [[Performance]].
+	 * They can however, be changed while editing a [[Program]].
 	 */
 	notes: { [VC in VibraphoneChannel]: Note };
 }
@@ -324,8 +323,15 @@ export interface BassState {
 	capos: { [S in BassString]?: number };
 	/**
 	 * Which notes the strings are tuned to.
-	 * Nothing means the standard bass tuning
-	 * `E A D G` (for now).
+	 * Nothing means the standard bass tuning:
+	 * ```typescript
+	 * {
+	 *   4: "E1",
+	 *   3: "A1",
+	 *   2: "D2",
+	 *   1: "G2",
+	 * }
+	 * ```
 	 */
 	tuning: { [S in BassString]?: Note };
 }
@@ -346,7 +352,7 @@ export interface BassCapoEvent {
 
 /** Represents the state pertaining to the hihat machine. */
 export interface HihatMachineState {
-	/** TBD */
+	/** The meaning of this property has yet to be determined. */
 	setting: string;
 }
 
