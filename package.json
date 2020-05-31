@@ -21,5 +21,8 @@
 		"url": "https://github.com/wintergatan-community/vmmx-schema/issues"
 	},
 	"homepage": "https://github.com/wintergatan-community/vmmx-schema#readme",
-	"devDependencies": {}
+	"devDependencies": {
+		"typedoc": "^0.17.7",
+		"typescript": "^3.9.3"
+	}
 }
