@@ -150,6 +150,10 @@ export interface VibraphoneDropEvent {
 
 /**
  * Represents a single performance of the associated [[Program]].
+ *
+ * Performances contain all events that exist outside of the
+ * programming wheel. This could be a manual drop, a change of
+ * one of the bass capos, or any other event in the [[Event]] type.
  */
 export interface Performance {
 	/** Information about this performance. */
