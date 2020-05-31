@@ -2,9 +2,10 @@
 	"name": "vmmx-schema",
 	"version": "1.0.0-beta",
 	"description": "VMMX data structure",
-	"main": "schema.ts",
+	"main": "src/schema.ts",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"docs": "typedoc --out docs --mode modules src/"
 	},
 	"repository": {
 		"type": "git",
