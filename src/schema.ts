@@ -309,8 +309,8 @@ export interface VibraphoneVibratoSpeedEvent {
  * Represents a single string on the bass.
  *
  * We chose to start at one since musicians count
- * starting from one and the terminology already
- * exists in the music realm.
+ * starting from one. String 1 is highest pitched
+ * string, and string 4 is the lowest pitched string.
  */
 export type BassString = 1 | 2 | 3 | 4;
 
