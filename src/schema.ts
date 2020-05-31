@@ -147,6 +147,15 @@ export interface VibraphoneDropEvent {
 	 */
 	channel: VibraphoneChannel;
 }
+export enum EventBakeType {
+	AUTO,
+	MODIFIED_AUTO,
+	MANUAL,
+}
+export type PerformanceDropEvent = DropEvent & CorePerformanceDropEvent;
+export interface CorePerformanceDropEvent {
+	bakeType: EventBakeType;
+}
 
 /**
  * Represents a single performance of the associated [[Program]].
@@ -197,7 +206,7 @@ export interface PerformanceMetadata {
  * be represented by multiple events with the same tick.
  */
 export type Event =
-	| DropEvent
+	| PerformanceDropEvent
 	| MachineEvent
 	| VibraphoneEvent
 	| HihatMachineEvent
@@ -205,9 +214,9 @@ export type Event =
 	| BassEvent;
 
 /** Represents an event occurring in time (non-tempo dependent). */
-export type TimedEvent = BaseTimedEvent & Event;
+export type TimedEvent = CoreTimedEvent & Event;
 /** Represents information associated with all timed events. */
-export interface BaseTimedEvent {
+export interface CoreTimedEvent {
 	/** The time (in seconds) that this event occurs. */
 	time: number;
 }
