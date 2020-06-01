@@ -9,6 +9,6 @@ In this repo, the core data structure that's used by the VMMX project is defined
 
 ## Ducumentation
 
-Documentation is avaiable on [GitHub Pages](https://wintergatan-community.github.io/vmmx-schema/).
+~~Documentation is avaiable on [GitHub Pages](https://wintergatan-community.github.io/vmmx-schema/).~~ (Work in progress)
 
 [Typedoc](https://typedoc.org/) can be used to generate API/Type documentation for this package.
