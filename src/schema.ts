@@ -258,10 +258,10 @@ export type VibraphoneEvent =
 /** Represents the state pertaining to the bass. */
 export interface BassState {
 	/**
-	 * Which frets the capos are on.
-	 * `0` or nothing means no capo is applied to that string.
+	 * Which frets the capos are on and if they are engaged.
+	 * `0` is an open string.
 	 */
-	capos: { [S in BassString]?: number };
+	capos: { [S in BassString]: { engaged: boolean, fret: number } };
 	/**
 	 * Which notes the strings are tuned to.
 	 * Nothing means the standard bass tuning:
@@ -278,10 +278,10 @@ export interface BassState {
 }
 
 /** An event corresponding to a capo being applied, moved, or removed. */
-export interface BassCapoEvent {
-	kind: "bass_capo";
+export interface CapoFretEvent {
+	kind: "capo_fret";
 	/** Which string is affected. */
-	capoString: BassString;
+	bassString: BassString;
 	/**
 	 * Which fret is the capo to be applied to.
 	 * `0` or nothing means no capo is applied.
@@ -289,8 +289,18 @@ export interface BassCapoEvent {
 	fret: number;
 }
 
+export interface CapoEngagedEvent {
+	kind: "capo_engaged";
+	/** Which string is affected. */
+	bassString: BassString;
+	/**
+	 * If the capo is engaged
+	 */
+	engaged: boolean;
+}
+
 /** Any event pertaining to the bass. */
-export type BassEvent = BassCapoEvent;
+export type CapoEvent = CapoFretEvent | CapoEngagedEvent;
 
 /** Represents the state pertaining to the hihat machine. */
 export interface HihatMachineState {
@@ -328,18 +338,6 @@ export interface HihatClosedEvent {
 /** Any event pertaining to the hihat, not the hihat machine. */
 export type HihatEvent = HihatClosedEvent;
 
-export enum EventBakeType {
-	AUTO,
-	MODIFIED_AUTO,
-	MANUAL,
-}
-
-export type PerformanceDropEvent = DropEvent & CorePerformanceDropEvent;
-
-export interface CorePerformanceDropEvent {
-	bakeType: EventBakeType;
-}
-
 /**
  * An untimed event that changes the state of one channel
  * or manually drops a marble.
@@ -348,12 +346,12 @@ export interface CorePerformanceDropEvent {
  * be represented by multiple events with the same tick.
  */
 export type Event =
-	| PerformanceDropEvent
+	| DropEvent
 	| MachineEvent
 	| VibraphoneEvent
 	| HihatMachineEvent
 	| HihatEvent
-	| BassEvent;
+	| CapoEvent;
 
 /** Represents information associated with all timed events. */
 export interface CoreTimedEvent {
