@@ -1,24 +1,12 @@
 /**
  * # Main schema definition
  *
- * ## Contents:
- * - [[Program]]
- * - [[ProgramMetadata]]
- * - [[State]]
- * - [[DropEvent]] (and subtypes/interfaces)
- * -------
- * - [[Performance]]
- * - [[PerformanceMetadata]]
- * - Events
- * -------
- * Ordered by Machine, Vibraphone, Bass,
- * HiHat machine, HiHat:
- * - sub-States
- * - sub-Events
  * @packageDocumentation
  */
 
 import { Note } from "./note_names";
+
+//#region type constants
 
 /**
  * Represents a single string on the bass.
@@ -60,6 +48,10 @@ export type DrumType = "bassdrum" | "hihat" | "snare";
  * };
  */
 export type Channel = DrumType | "vibraphone" | "bass";
+
+//#endregion
+
+//#region DropEvents
 
 /** Represents the dropping of a single bass marble. */
 export interface BassDropEvent {
@@ -109,6 +101,10 @@ export interface CoreDropEvent {
 
 /** Represents the dropping of a single marble with an associated tick. */
 export type TickedDropEvent = CoreDropEvent & DropEvent;
+
+//#endregion
+
+//#region Program
 
 /** Represents metadata about a program. Used to indicate how this program should be played. */
 export interface ProgramMetadata {
@@ -163,6 +159,10 @@ export interface Program {
 	dropEvents: TickedDropEvent[];
 }
 
+//#endregion
+
+//#region State
+
 /**
  * Represents the overall state of the machine. Everything that's
  * not specific to a particular instrument is represented here.
@@ -175,6 +175,70 @@ export interface MachineState {
 	/** Whether or not the programming wheel is spinning. */
 	flywheelConnected: boolean;
 }
+
+/**
+ * Represents the state pertaining to the vibraphone.
+ */
+export interface VibraphoneState {
+	/** Whether or not the vibrato is engaged */
+	vibratoEnabled: boolean;
+	/** The vibrato speed from 0 to 1 */
+	vibratoSpeed: number;
+	/**
+	 * Which notes represent which channels.
+	 * These cannot be changed via events and thus stay
+	 * the same throughout the course of an entire [[Performance]].
+	 * They can however, be changed while editing a [[Program]].
+	 */
+	notes: { [VC in VibraphoneChannel]: Note };
+}
+
+/** Represents the state pertaining to the bass. */
+export interface BassState {
+	/**
+	 * Which frets the capos are on and if they are engaged.
+	 * `0` is an open string.
+	 */
+	capos: { [S in BassString]: { engaged: boolean, fret: number } };
+	/**
+	 * Which notes the strings are tuned to.
+	 * Nothing means the standard bass tuning:
+	 * ```typescript
+	 * {
+	 *   4: "E1",
+	 *   3: "A1",
+	 *   2: "D2",
+	 *   1: "G2",
+	 * }
+	 * ```
+	 */
+	tuning: { [S in BassString]?: Note };
+}
+
+/** Represents the state pertaining to the hihat machine. */
+export interface HihatMachineState {
+	/** The meaning of this property has yet to be determined. */
+	setting: string;
+}
+
+/** Represents the state pertaining to the hihat, not the hihat machine. */
+export interface HihatState {
+	/** Whether or not the hihat is closed. */
+	closed: boolean;
+}
+
+/** Represents the machine's state. Used to specify both the start state and running state of the machine. */
+export interface State {
+	machine: MachineState;
+	vibraphone: VibraphoneState;
+	bass: BassState;
+	hihatMachine: HihatMachineState;
+	hihat: HihatState;
+}
+
+//#endregion
+
+//#region Events
 
 /** An event representing the muting or unmuting of a [[Channel]] */
 export interface MachineMuteEvent {
@@ -217,23 +281,6 @@ export interface FlywheelConnectedEvent {
  */
 export type MachineEvent = MachineMuteEvent | MachineTempoEvent | FlywheelConnectedEvent;
 
-/**
- * Represents the state pertaining to the vibraphone.
- */
-export interface VibraphoneState {
-	/** Whether or not the vibrato is engaged */
-	vibratoEnabled: boolean;
-	/** The vibrato speed from 0 to 1 */
-	vibratoSpeed: number;
-	/**
-	 * Which notes represent which channels.
-	 * These cannot be changed via events and thus stay
-	 * the same throughout the course of an entire [[Performance]].
-	 * They can however, be changed while editing a [[Program]].
-	 */
-	notes: { [VC in VibraphoneChannel]: Note };
-}
-
 /** An event corresponding to a change in the [[VibraphoneState.vibratoEnabled]] property. */
 export interface VibraphoneVibratoEnabledEvent {
 	kind: "vibraphone_vibrato_enabled";
@@ -254,28 +301,6 @@ export interface VibraphoneVibratoSpeedEvent {
 export type VibraphoneEvent =
 	| VibraphoneVibratoEnabledEvent
 	| VibraphoneVibratoSpeedEvent;
-
-/** Represents the state pertaining to the bass. */
-export interface BassState {
-	/**
-	 * Which frets the capos are on and if they are engaged.
-	 * `0` is an open string.
-	 */
-	capos: { [S in BassString]: { engaged: boolean, fret: number } };
-	/**
-	 * Which notes the strings are tuned to.
-	 * Nothing means the standard bass tuning:
-	 * ```typescript
-	 * {
-	 *   4: "E1",
-	 *   3: "A1",
-	 *   2: "D2",
-	 *   1: "G2",
-	 * }
-	 * ```
-	 */
-	tuning: { [S in BassString]?: Note };
-}
 
 /** An event corresponding to a capo being applied, moved, or removed. */
 export interface CapoFretEvent {
@@ -302,12 +327,6 @@ export interface CapoEngagedEvent {
 /** Any event pertaining to the bass. */
 export type CapoEvent = CapoFretEvent | CapoEngagedEvent;
 
-/** Represents the state pertaining to the hihat machine. */
-export interface HihatMachineState {
-	/** The meaning of this property has yet to be determined. */
-	setting: string;
-}
-
 /** An event corresponding to a change in the hihat machine's setting. */
 export interface HihatMachineSettingEvent {
 	kind: "hihatmachine_setting";
@@ -321,12 +340,6 @@ export interface HihatMachineSettingEvent {
 
 /** Any event pertaining to the hihat machine. */
 export type HihatMachineEvent = HihatMachineSettingEvent;
-
-/** Represents the state pertaining to the hihat, not the hihat machine. */
-export interface HihatState {
-	/** Whether or not the hihat is closed. */
-	closed: boolean;
-}
 
 /** An event corresponding to a change in the hihat closed status. */
 export interface HihatClosedEvent {
@@ -362,14 +375,9 @@ export interface CoreTimedEvent {
 /** Represents an event occurring in time (non-tempo dependent). */
 export type TimedEvent = CoreTimedEvent & Event;
 
-/** Represents the machine's state. Used to specify both the start state and running state of the machine. */
-export interface State {
-	machine: MachineState;
-	vibraphone: VibraphoneState;
-	bass: BassState;
-	hihatMachine: HihatMachineState;
-	hihat: HihatState;
-}
+//#endregion
+
+//#region Performance
 
 /** Metadata for performance */
 export interface PerformanceMetadata {
@@ -412,3 +420,5 @@ export interface Performance {
 	 */
 	events: TimedEvent[];
 }
+
+//#endregion
