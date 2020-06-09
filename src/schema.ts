@@ -37,6 +37,7 @@ export type DrumType = "bassdrum" | "hihat" | "snare";
  *   },
  *   ...
  * };
+ * ```
  */
 export type Channel = DrumType | "vibraphone" | "bass";
 
