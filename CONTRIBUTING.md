@@ -1,28 +1,46 @@
+> This file is very similar to the `CONTRIBUTING.md` of `virtual-mmx`
+
 > This is not the bible, but sticking to this will ensure that you don't waste your time and talent.
 
 ## GitHub flow
+
 If you're unfamiliar with the GitHub flow, [this](https://guides.github.com/introduction/flow/) is a good, 5 minute long introduction. We're using the **Fork & Pull** model.
 
-**Pull requests** should be immediately created. It's a good idea to set them to [draft mode](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests#draft-pull-requests "draft mode") since they'll be around for some time. Undo this once others should review and accept the PR.
-PRs are also the place to specify and discuss feature development. You can use GitHub flavored markdown ([GFM](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf)), including @&shy;mentions.
+**Issues** marked as feature are the base of our flow. These mark single bits of work (tasks, features) that can be done in parallel.
 
-![Flowchart SVG](https://raw.githubusercontent.com/wintergatan-community/vmmx-schema/master/images/flowchart.svg)
+If someone wants to work on a feature, they should **comment "Claim"** to be assigned to the issue by a maintainer.
 
-:information_source: [Forks](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) | [Creating a pull request from a fork](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork)
+**Pull requests** (PR) should be created as soon as possible. It's a good idea to set them to [draft mode](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests#draft-pull-requests "draft mode") since they'll be around for some time. Undo this once others should review and accept the PR.
 
-![create pull request](https://raw.githubusercontent.com/wintergatan-community/vmmx-schema/master/images/create%20PR.gif)
+<p align="center">
+	<img alt="Flowchart" src="./images/flowchart.svg" />
+</p>
+<p align="center">
+	ℹ️ <a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">Forks</a>
+	| <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork">Creating a PR from a fork</a>
+</p>
+
+While the issue is the place to discuss the feature, the PR is the place to discuss the code (usually between assignees).
+
+<p align="center">
+	<img alt="Where to discuss" src="./images/where-to-discuss.svg" />
+</p>
+<p align="center">
+	ℹ️ <a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf">GitHub Flavored Markdown</a>
+</p>
 
 ## Contributing
-We use [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/) and [Bootstrap](https://getbootstrap.com/)
+
+We use [TypeScript](https://www.typescriptlang.org/) for the schema
 
 To aid our eyes, we use [Prettier](https://prettier.io/docs/en/editors.html) with the following `.prettierrc` configuration:
+
 ```json
 {
-  "useTabs": true
+	"useTabs": true
 }
 ```
 
-## Discussion
-Discussing features should be done in the PR, if one exists.  
-We have a [discussion channel](https://discord.gg/rMK6DFT) on the Wintergatan Discord guild.  
-For more of a structured discussion, use GitHub [Issues](https://github.com/wintergatan-community/vmmx-schema/issues).
+Use [eslint](https://eslint.org/) to highlight code problems.
+
+> In the future, Prettier and eslint will be checked against before merging.
