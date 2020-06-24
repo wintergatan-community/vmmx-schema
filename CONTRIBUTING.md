@@ -1,10 +1,3 @@
-<style>
-img {
-	position:relative;
-	left: 50%;
-	transform: translate(-50%);
-}
-</style>
 > This file is very similar to the `CONTRIBUTING.md` of `virtual-mmx`
 
 > This is not the bible, but sticking to this will ensure that you don't waste your time and talent.
@@ -19,8 +12,9 @@ If someone wants to work on a feature, they should **comment "Claim"** to be ass
 
 **Pull requests** (PR) should be created as soon as possible. It's a good idea to set them to [draft mode](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests#draft-pull-requests "draft mode") since they'll be around for some time. Undo this once others should review and accept the PR.
 
-![Flowchart](images/flowchart.svg)
-
+<p align="center">
+	<img alt="Flowchart" src="./images/flowchart.svg" />
+</p>
 <p align="center">
 	ℹ️ <a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">Forks</a>
 	| <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork">Creating a PR from a fork</a>
@@ -28,7 +22,9 @@ If someone wants to work on a feature, they should **comment "Claim"** to be ass
 
 While the issue is the place to discuss the feature, the PR is the place to discuss the code (usually between assignees).
 
-![Where to discuss](images/where-to-discuss.svg)
+<p align="center">
+	<img alt="Where to discuss" src="./images/where-to-discuss.svg" />
+</p>
 <p align="center">
 	ℹ️ <a href="https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf">GitHub Flavored Markdown</a>
 </p>
