@@ -110,11 +110,11 @@ export interface State {
 export type DropEvent = BassDropEvent | DrumDropEvent | VibraphoneDropEvent;
 
 /** The dropping of a single marble with an associated tick. */
-export type TickedDropEvent = CoreDropEvent & DropEvent;
+export type TickedDropEvent = TickedEvent & DropEvent;
 
-/** Information common to all drop events. */
-export interface CoreDropEvent {
-	/** The tick (pulse) that the marble is to be dropped on. */
+/** Information common to all ticked events. */
+export interface TickedEvent {
+	/** The tick (pulse) that the event appears. */
 	tick: number;
 }
 
@@ -191,8 +191,12 @@ export interface Performance {
 	/**
 	 * The events that make up this performance. As with [[Program.dropEvents]],
 	 * these events must be in ascending order.
+	 * The performance events will be merged with program events on runtime, depending on
+	 * the performance events at a specific tick. Performance event ticks and program ticks
+	 * are always in sync (although the program might be stopped while the performance still
+	 * continues).
 	 */
-	events: TimedEvent[];
+	events: TickedPerformanceEvent[];
 }
 
 /** Metadata for performance */
@@ -224,14 +228,8 @@ export type Event =
 	| HihatEvent
 	| BassEvent;
 
-/** An event occurring in time (non-tempo dependent). */
-export type TimedEvent = CoreTimedEvent & Event;
-
-/** Information associated with all timed events. */
-export interface CoreTimedEvent {
-	/** The time in seconds that this event occurs. */
-	time: number;
-}
+/** An event occurring during a performance. We also count them in ticks to be in sync with program events. */
+export type TickedPerformanceEvent = TickedEvent & Event;
 
 /**
  * The overall state of the machine. Everything that's
