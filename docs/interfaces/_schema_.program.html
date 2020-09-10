@@ -72,7 +72,9 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents a program on the MMX&#39;s programming wheel. Used to store the programmed part of a performance.</p>
+						<p>The program represents the MMX&#39;s programming wheel, which can/will have multiple rotations throughout the
+							<a href="_schema_.performance.html">Performance</a>. It can also have its tempo changed or stopped completely. Other musician actions such as
+						manually dropping marbles is done outside of the Program in the Performance.</p>
 					</div>
 				</div>
 			</section>
@@ -107,7 +109,7 @@
 					<div class="tsd-signature tsd-kind-icon">drop<wbr>Events<span class="tsd-signature-symbol">:</span> <a href="../modules/_schema_.html#tickeddropevent" class="tsd-signature-type">TickedDropEvent</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wintergatan-community/vmmx-schema/blob/0abda06/src/schema.ts#L69">schema.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/wintergatan-community/vmmx-schema/blob/9fadd90/src/schema.ts#L73">schema.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -122,7 +124,7 @@
 					<div class="tsd-signature tsd-kind-icon">metadata<span class="tsd-signature-symbol">:</span> <a href="_schema_.programmetadata.html" class="tsd-signature-type">ProgramMetadata</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wintergatan-community/vmmx-schema/blob/0abda06/src/schema.ts#L50">schema.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/wintergatan-community/vmmx-schema/blob/9fadd90/src/schema.ts#L54">schema.ts:54</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -137,7 +139,7 @@
 					<div class="tsd-signature tsd-kind-icon">state<span class="tsd-signature-symbol">:</span> <a href="_schema_.state.html" class="tsd-signature-type">State</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wintergatan-community/vmmx-schema/blob/0abda06/src/schema.ts#L65">schema.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/wintergatan-community/vmmx-schema/blob/9fadd90/src/schema.ts#L69">schema.ts:69</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -187,6 +189,9 @@ prog.state.machine.mute.snare = !prog.state.machine.mute.snare;</code></pre>
 						<a href="_schema_.bassstate.html" class="tsd-kind-icon">Bass<wbr>State</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="_schema_.channelmuteevent.html" class="tsd-kind-icon">Channel<wbr>Mute<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_schema_.coredropevent.html" class="tsd-kind-icon">Core<wbr>Drop<wbr>Event</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -212,9 +217,6 @@ prog.state.machine.mute.snare = !prog.state.machine.mute.snare;</code></pre>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_schema_.hihatstate.html" class="tsd-kind-icon">Hihat<wbr>State</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_schema_.machinemuteevent.html" class="tsd-kind-icon">Machine<wbr>Mute<wbr>Event</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_schema_.machinestate.html" class="tsd-kind-icon">Machine<wbr>State</a>
