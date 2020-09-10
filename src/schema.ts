@@ -1,23 +1,31 @@
 /**
  * # Main schema definition
  *
- * ## Contents:
- * - [[Program]]
- * - [[ProgramMetadata]]
- * - [[State]]
- * - [[DropEvent]] (and subtypes/interfaces)
- * -------
- * - [[Performance]]
- * - [[PerformanceMetadata]]
- * - Events
- * -------
- * Ordered by Machine, Vibraphone, Bass,
- * HiHat machine, HiHat:
- * - sub-States
- * - sub-Events
  * @packageDocumentation
  */
+
 import { Note } from "./note_names";
+
+//#region type constants
+
+/**
+ * Represents a single string on the bass.
+ *
+ * We chose to start at one since musicians count
+ * starting from one. String 1 is highest pitched
+ * string, and string 4 is the lowest pitched string.
+ */
+export type BassString = 1 | 2 | 3 | 4;
+
+/**
+ * Represents every channel that can be played on the vibraphone.
+ *
+ * We decided to start at one since the [[BassString]] type also
+ * starts at one. We also decided to only represent playable
+ * channels and not actual channels (two per note) because that is
+ * an implementation detail of the physical MMX.
+ */
+export type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
 
 /**
  * All possible drums that can be played. Used for specifying which drum
@@ -180,49 +188,55 @@ export interface Performance {
 	/** The program associated with this performance. */
 	program: Program;
 	/**
-	 * The state of the machine at the start of the performance.
-	 *
-	 * Note that this should not be changed during the performance.
-	 * Use [[Program.state]] if you want to keep track of the current
-	 * state of the machine. This means that [[Performance.initialState]]
-	 * should be copied into [[Program.state]] at tick 0 of Performance playback.
+	 * The title of this program. It can be distinct from the title of the performance.
 	 */
-	readonly initialState: State;
+	title: string;
 	/**
-	 * The events that make up this performance. As with [[Program.dropEvents]],
-	 * these events must be in ascending order.
+	 * The author of this program. It can be distinct from the title of the performance.
 	 */
-	events: TimedEvent[];
+	author: string;
+	/**
+	 * Pulses per quarter.
+	 * This basically represents how many distinct pieces a quarter note is divisible by.
+	 * The higher the PPQ, the more flexibility when it comes to placing notes.
+	 */
+	readonly tpq: 240;
+	/** Version of VMMX in which the current program was made */
+	readonly version: string;
+	/** Total ticks on the "programming wheel" 240 PPQ \* 4 beats/measure \* 16 bars on wheel */
+	readonly length: 61440;
+	/** The amount of procrastination that occurred during the making of this program. */
+	procrastination?: number;
 }
 
 /** Metadata for performance */
 export interface PerformanceMetadata {
 	/**
-	 * The title of the performance.
-	 * This doesn't have to be the same as the title of the program.
+	 * Information about this program. It can be distinct from a performance's metadata.
 	 */
-	title: string;
+	metadata: ProgramMetadata;
 	/**
-	 * The author/performer of the performance.
-	 * This doesn't have to be the same as the author of the program.
+	 * This is the "working" state of the machine, outside of a performance.
+	 * When a user is modifying the program, this is how we store what settings they use.
+	 * Whenever the user saves, this field gets updated, and whether they load, this gets read.
+	 * It has almost no relevance when editing a performance since the performance events will
+	 * cause it to be updated dynamically.
+	 *
+	 * ## Example
+	 * ```typescript
+	 * let prog: Program;
+	 * // invert the muted state of the snare
+	 * prog.state.machine.mute.snare = !prog.state.machine.mute.snare;
+	 * ```
 	 */
-	author: string;
+	state: State;
+	/**
+	 * All the [[TickedDropEvent]]s that occur during this program. They *must* be in ascending order by tick.
+	 */
+	dropEvents: TickedDropEvent[];
 }
 
-/**
- * An untimed event that changes the state of one channel
- * or manually drops a marble.
- *
- * Events only change one thing. Multiple simultaneous changes must
- * be represented by multiple events with the same tick.
- */
-export type Event =
-	| PerformanceDropEvent
-	| MachineEvent
-	| VibraphoneEvent
-	| HihatMachineEvent
-	| HihatEvent
-	| BassEvent;
+//#endregion
 
 /** An event occurring in time (non-tempo dependent). */
 export type TimedEvent = CoreTimedEvent & Event;
@@ -247,7 +261,7 @@ export interface MachineState {
 }
 
 /**
- * All possible events relating to the machine itself.
+ * Represents the state pertaining to the vibraphone.
  */
 export type MachineEvent = ChannelMuteEvent;
 
@@ -294,7 +308,7 @@ export interface FlywheelConnectedEvent {
  * starts at one. We also decided to only represent playable
  * channels and not actual channels (two per note).
  */
-export type VibraphoneChannel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+export type MachineEvent = MachineMuteEvent | MachineTempoEvent | FlywheelConnectedEvent;
 
 /**
  * The state pertaining to the vibraphone.
@@ -369,10 +383,10 @@ export interface BassState {
 export type BassEvent = BassCapoEvent;
 
 /** An event corresponding to a capo being applied, moved, or removed. */
-export interface BassCapoEvent {
-	kind: "bass_capo";
+export interface CapoFretEvent {
+	kind: "capo_fret";
 	/** Which string is affected. */
-	capoString: BassString;
+	bassString: BassString;
 	/**
 	 * Which fret is the capo to be applied to.
 	 * `0` or nothing means no capo is applied.
@@ -415,3 +429,78 @@ export interface HihatClosedEvent {
 	/** Whether or not the hihat should be closed or opened. */
 	closed: boolean;
 }
+
+/** Any event pertaining to the hihat, not the hihat machine. */
+export type HihatEvent = HihatClosedEvent;
+
+/**
+ * An untimed event that changes the state of one channel
+ * or manually drops a marble.
+ *
+ * Events only change one thing. Multiple simultaneous changes must
+ * be represented by multiple events with the same tick.
+ */
+export type Event =
+	| DropEvent
+	| MachineEvent
+	| VibraphoneEvent
+	| HihatMachineEvent
+	| HihatEvent
+	| CapoEvent;
+
+/** Represents information associated with all timed events. */
+export interface CoreTimedEvent {
+	/** The time (in seconds) that this event occurs. */
+	time: number;
+}
+
+/** Represents an event occurring in time (non-tempo dependent). */
+export type TimedEvent = CoreTimedEvent & Event;
+
+//#endregion
+
+//#region Performance
+
+/** Metadata for performance */
+export interface PerformanceMetadata {
+	/**
+	 * The title of the performance.
+	 * This doesn't have to be the same as the title of the program.
+	 */
+	title: string;
+	/**
+	 * The author/performer of the performance.
+	 * This doesn't have to be the same as the author of the program.
+	 */
+	author: string;
+}
+
+/**
+ * Represents a single performance of the associated [[Program]].
+ *
+ * Performances contain all events that exist outside of the
+ * programming wheel. This could be a manual drop, a change of
+ * one of the bass capos, or any other event in the [[Event]] type.
+ */
+export interface Performance {
+	/** Information about this performance. */
+	metadata: PerformanceMetadata;
+	/** The program associated with this performance. */
+	program: Program;
+	/**
+	 * The state of the machine at the start of the performance.
+	 *
+	 * Note that this should not be changed during the performance.
+	 * Use [[Program.state]] if you want to keep track of the current
+	 * state of the machine. This means that [[Performance.initialState]]
+	 * should be copied into [[Program.state]] at tick 0 of Performance playback.
+	 */
+	readonly initialState: State;
+	/**
+	 * The events that make up this performance. As with [[Program.dropEvents]],
+	 * these events must be in ascending order.
+	 */
+	events: TimedEvent[];
+}
+
+//#endregion
