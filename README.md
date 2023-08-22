@@ -1,3 +1,7 @@
+# Repository archived
+
+This repository is no longer worked on and in read-only mode.
+
 # VMMX Schema
 
 [![](https://img.shields.io/github/issues/wintergatan-community/vmmx-schema)](https://github.com/wintergatan-community/vmmx-schema/issues)
